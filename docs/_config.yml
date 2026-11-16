@@ -1,0 +1,34 @@
+# configuracion de jekyll para la pagina de bote en github pages.
+# jekyll-seo-tag (incluido en el tema por defecto de github pages) genera las
+# etiquetas para las previstas al compartir el enlace: og:*, twitter:*,
+# description y title
+
+title: bote
+tagline: caja eurorack de piruetas
+# url absoluta, para que og:image y og:url salgan completas (las previstas
+# necesitan la url completa de la imagen)
+url: https://piruetas.xyz
+description: >-
+  Caja eurorack imprimible en 3D de piruetas, hecha en OpenSCAD y publicada
+  como hardware de código abierto. Visor 3D y archivos .stl de cada revisión.
+lang: es_CL
+locale: es_CL
+
+plugins:
+  - jekyll-seo-tag
+
+# prevista al compartir: 1200 x 630, bajo 300 KB. se genera con
+# ./scripts/generar-prevista.sh desde la ultima revision. con imagen,
+# jekyll-seo-tag usa sola la tarjeta grande (twitter:card summary_large_image)
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/prevista.jpg
+        width: 1200
+        height: 630
+
+# los .stl se copian a stl/ en el workflow, no estan en el repositorio
+exclude:
+  - README.md
