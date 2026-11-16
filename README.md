@@ -67,13 +67,13 @@ y después volver a exportar y revisar que la caja no cambió sin querer.
 
 En cada push a `main`, el workflow [publicar.yml](./.github/workflows/publicar.yml) copia los `.stl` de cada carpeta `hardware/bote-v-X-rev-Y-fab/` a la página, construye [docs](./docs) con Jekyll y la publica en GitHub Pages, con un visor 3D y un enlace de descarga por revisión. Las revisiones aparecen solas apenas su carpeta `-fab` tiene un `.stl`; el título, la fecha, las medidas y la descripción de cada una van en [docs/_data/revisiones.yml](./docs/_data/revisiones.yml). Los `.stl` no se renderizan en el workflow: hay que exportarlos con `./scripts/exportar-stl.sh` y hacer commit.
 
-La imagen que se muestra al compartir el enlace (`og:image`, 1200 × 630) es [docs/assets/prevista.jpg](./docs/assets/prevista.jpg), un render de la última revisión. Para actualizarla después de una revisión nueva (requiere `openscad` y `ffmpeg`):
+La imagen que se muestra al compartir el enlace (`og:image`, 1200 × 630) es `docs/assets/prevista-<revisión>.jpg`, un render de la última revisión. Para actualizarla después de una revisión nueva (requiere `openscad` y `ffmpeg`):
 
 ```bash
 ./scripts/generar-prevista.sh
 ```
 
-y hacer commit de la imagen. El título, la descripción y el idioma de la prevista están en [docs/_config.yml](./docs/_config.yml).
+El script borra la prevista anterior y actualiza su ruta en `docs/_config.yml`. Como el nombre del archivo cambia con cada revisión, WhatsApp y otras apps muestran la imagen nueva en vez de la que tenían en caché. Después hay que hacer commit de `docs/assets/` y `docs/_config.yml`. El título, la descripción y el idioma de la prevista están en [docs/_config.yml](./docs/_config.yml).
 
 ## Estructura del repositorio
 

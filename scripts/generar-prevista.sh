@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-# genera docs/assets/prevista.jpg, la imagen que se muestra al compartir un
-# enlace a la pagina (og:image). es un render de la ultima revision en
-# 1200 x 630, bajo 300 KB para que whatsapp la muestre.
+# genera docs/assets/prevista-<revision>.jpg, la imagen que se muestra al
+# compartir un enlace a la pagina (og:image). es un render de la ultima
+# revision en 1200 x 630, bajo 300 KB para que whatsapp la muestre.
+#
+# el nombre lleva la revision porque whatsapp y otras apps guardan la imagen
+# en cache por url: con un nombre nuevo en cada revision, la prevista se
+# actualiza sola. el script borra las previstas anteriores y actualiza la
+# ruta de la imagen en docs/_config.yml.
 #
 # se corre a mano en local, no en el workflow, porque necesita openscad y
-# ffmpeg. despues hay que hacer commit de docs/assets/prevista.jpg:
+# ffmpeg. despues hay que hacer commit de docs/assets/ y docs/_config.yml:
 #   ./scripts/generar-prevista.sh
 # o con una revision en particular:
 #   ./scripts/generar-prevista.sh bote-v-0-rev-d
@@ -43,8 +48,15 @@ if [ ! -f "$fuente" ]; then
   exit 1
 fi
 
-salida="$raiz_repo/docs/assets/prevista.jpg"
+nombre="prevista-$revision.jpg"
+salida="$raiz_repo/docs/assets/$nombre"
+config="$raiz_repo/docs/_config.yml"
 mkdir -p "$(dirname "$salida")"
+
+if ! grep -q '^ *path: /assets/prevista.*\.jpg$' "$config"; then
+  echo "no se encontro la linea 'path: /assets/prevista...jpg' en $config" >&2
+  exit 1
+fi
 
 temporal="$(mktemp -d)"
 trap 'rm -rf "$temporal"' EXIT
@@ -67,4 +79,11 @@ for calidad in 2 3 5 7 10; do
   [ "$peso" -le "$peso_maximo" ] && break
 done
 
-echo "Listo: docs/assets/prevista.jpg ($((peso / 1024)) KB, desde $revision)"
+# borrar las previstas anteriores y apuntar _config.yml a la nueva
+for anterior in "$raiz_repo"/docs/assets/prevista*.jpg; do
+  [ "$anterior" = "$salida" ] || rm -f "$anterior"
+done
+sed -i.bak "s|^\( *path: \)/assets/prevista.*\.jpg$|\1/assets/$nombre|" "$config"
+rm -f "$config.bak"
+
+echo "Listo: docs/assets/$nombre ($((peso / 1024)) KB), _config.yml actualizado"
