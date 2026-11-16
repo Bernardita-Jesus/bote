@@ -27,9 +27,11 @@ BOTE_RIEL_ESPESOR = 5;
 // plastico, porque los agujeros impresos salen ~0.1 mm mas chicos
 BOTE_RIEL_DIAMETRO_PILOTO = 2.9;
 
-// chaflan de entrada arriba de cada agujero de los rieles, para que
-// el tornillo encuentre el agujero y parta derecho
-BOTE_RIEL_CHAFLAN_ENTRADA = 0.5;
+// chaflan de entrada arriba de cada agujero de los rieles. en 0 no
+// hay chaflan: en la prueba con prueba_agujeros.scad el agujero de
+// 2.9 mm sin chaflan fue el unico comodo para atornillar con los
+// dedos desde arriba
+BOTE_RIEL_CHAFLAN_ENTRADA = 0;
 
 // juego total del asiento de los paneles, en x y en y
 BOTE_HOLGURA = 0.4;
@@ -143,8 +145,9 @@ module bote_caja(
             translate([x_paneles + MARGEN_X + k * MODULO_ANCHO + dx, y_paneles + y, 0]) {
               translate([0, 0, z_rieles - BOTE_RIEL_ESPESOR - BOTE_RIEL_ANCHO - 1])
                 cylinder(h = BOTE_RIEL_ESPESOR + BOTE_RIEL_ANCHO + 2, d = d, $fn = 24);
-              translate([0, 0, z_rieles - c])
-                cylinder(h = c + 0.01, d1 = d, d2 = d + 2 * c, $fn = 24);
+              if (c > 0)
+                translate([0, 0, z_rieles - c])
+                  cylinder(h = c + 0.01, d1 = d, d2 = d + 2 * c, $fn = 24);
             }
   }
 
