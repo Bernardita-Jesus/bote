@@ -31,8 +31,8 @@ BOTE_HP = 40;
 // atornillar con tornillos M3 x 6 mm la fuente chufe v0 rev-b (postes
 // de 11 mm, con el jack hacia el agujero de la pared izquierda) y a
 // su derecha el bus chufebu v0 rev-b (postes de 6 mm). los agujeros
-// piloto de los rieles suben de 2.6 a 2.9 mm, sin chaflan de entrada,
-// para atornillar los paneles con los dedos. el diametro se eligio
-// imprimiendo prueba_agujeros.scad.
+// piloto de los rieles y de los postes suben de 2.6 a 2.9 mm, sin
+// chaflan de entrada, para atornillar con los dedos. el diametro se
+// eligio imprimiendo prueba_agujeros.scad.
 // los agujeros del bus de poder dejan 15 mm de pared arriba y abajo,
 // y pasan a ser medias elipses de 90 mm de base y 34.4 mm de alto

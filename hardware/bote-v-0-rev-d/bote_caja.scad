@@ -20,12 +20,13 @@ BOTE_RIEL_ANCHO = 6;
 // tambien el chaflan, asi que caben tornillos M3 de 6 a 12 mm
 BOTE_RIEL_ESPESOR = 5;
 
-// diametro de los agujeros piloto de los rieles. mas grande que
-// ROSCA_DIAMETRO_PILOTO (2.6 mm) para que los tornillos M3 de los
-// paneles (por ejemplo befaco knurlies) se puedan atornillar y
+// diametro de todos los agujeros piloto M3 de la caja: los de los
+// rieles para los paneles y los de los postes para chufe y chufebu.
+// mas grande que ROSCA_DIAMETRO_PILOTO (2.6 mm) para que los
+// tornillos (por ejemplo befaco knurlies) se puedan atornillar y
 // desatornillar con los dedos. todavia hacen una rosca suave en el
 // plastico, porque los agujeros impresos salen ~0.1 mm mas chicos
-BOTE_RIEL_DIAMETRO_PILOTO = 2.9;
+BOTE_DIAMETRO_PILOTO = 2.9;
 
 // chaflan de entrada arriba de cada agujero de los rieles. en 0 no
 // hay chaflan: en la prueba con prueba_agujeros.scad el agujero de
@@ -136,7 +137,7 @@ module bote_caja(
   // su propia rosca en el plastico, con un chaflan de entrada arriba
   module agujeros_piloto() {
     ultimo = floor((ancho_int - BOTE_HOLGURA - 2 * MARGEN_X - BOTE_DESFASE_TORNILLOS) / MODULO_ANCHO + 0.001);
-    d = BOTE_RIEL_DIAMETRO_PILOTO;
+    d = BOTE_DIAMETRO_PILOTO;
     c = BOTE_RIEL_CHAFLAN_ENTRADA;
     for (k = [0 : ultimo])
       for (y = [MARGEN_Y, MODULO_ALTURA_3U - MARGEN_Y])
@@ -221,7 +222,7 @@ module bote_caja(
     // agujeros piloto de los postes, ciegos: no atraviesan el piso
     for (p = postes)
       translate([p[0], p[1], pared])
-        cylinder(h = p[2] + 1, d = ROSCA_DIAMETRO_PILOTO, $fn = 24);
+        cylinder(h = p[2] + 1, d = BOTE_DIAMETRO_PILOTO, $fn = 24);
 
     // agujeros del bus de poder en las paredes izquierda y derecha
     for (x = [-1, ancho_ext - pared - 1])
