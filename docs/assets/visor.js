@@ -10,6 +10,12 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 const COLOR_PIEZA = 0xf2c230;
 
+// espacio alrededor de la pieza: 1 la deja justo tocando los bordes
+const MARGEN = 1.25;
+
+// direccion desde donde se mira: en diagonal desde arriba y adelante
+const DIRECCION_VISTA = new THREE.Vector3(0.55, -0.85, 0.75).normalize();
+
 function crearVisor(contenedor) {
   const url = contenedor.dataset.stl;
   const estado = contenedor.querySelector(".visor-estado");
@@ -31,12 +37,38 @@ function crearVisor(contenedor) {
   const controles = new OrbitControls(camara, renderizador.domElement);
   controles.enableDamping = true;
 
+  // esfera que envuelve la pieza, se define cuando carga el .stl
+  let esfera = null;
+  // si la persona ya giro o acerco la vista, no se reencuadra al cambiar
+  // el tamano de la ventana
+  let movida = false;
+  controles.addEventListener("start", () => { movida = true; });
+
+  // aleja la camara lo justo para que la esfera entre completa, tanto en
+  // alto como en ancho (en pantallas angostas manda el ancho)
+  function encuadrar() {
+    if (!esfera) return;
+    const mitadVertical = THREE.MathUtils.degToRad(camara.fov / 2);
+    const mitadHorizontal = Math.atan(Math.tan(mitadVertical) * camara.aspect);
+    const mitad = Math.min(mitadVertical, mitadHorizontal);
+    const distancia = (esfera.radius * MARGEN) / Math.sin(mitad);
+
+    controles.target.copy(esfera.center);
+    camara.position.copy(esfera.center).addScaledVector(DIRECCION_VISTA, distancia);
+    camara.near = distancia / 100;
+    camara.far = distancia * 10;
+    camara.updateProjectionMatrix();
+    controles.update();
+  }
+
   function ajustarTamano() {
     const ancho = contenedor.clientWidth;
     const alto = contenedor.clientHeight;
+    if (!ancho || !alto) return;
     renderizador.setSize(ancho, alto, false);
     camara.aspect = ancho / alto;
     camara.updateProjectionMatrix();
+    if (!movida) encuadrar();
   }
   new ResizeObserver(ajustarTamano).observe(contenedor);
   ajustarTamano();
@@ -45,10 +77,8 @@ function crearVisor(contenedor) {
     url,
     (geometria) => {
       geometria.computeVertexNormals();
-      geometria.computeBoundingBox();
-      const caja = geometria.boundingBox;
-      const centro = caja.getCenter(new THREE.Vector3());
-      const tamano = caja.getSize(new THREE.Vector3()).length();
+      geometria.computeBoundingSphere();
+      esfera = geometria.boundingSphere;
 
       const pieza = new THREE.Mesh(
         geometria,
@@ -56,13 +86,7 @@ function crearVisor(contenedor) {
       );
       escena.add(pieza);
 
-      // vista en diagonal desde arriba y adelante
-      controles.target.copy(centro);
-      camara.position.copy(centro).add(new THREE.Vector3(0.55, -0.85, 0.75).multiplyScalar(tamano));
-      camara.near = tamano / 100;
-      camara.far = tamano * 10;
-      camara.updateProjectionMatrix();
-      controles.update();
+      encuadrar();
 
       if (estado) estado.remove();
     },
