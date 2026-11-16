@@ -1,0 +1,68 @@
+name: Publicar
+
+# Copia los .stl de cada revisión (hardware/bote-v-X-rev-Y-fab/) a
+# docs/stl/bote-v-X-rev-Y/, construye docs/ con Jekyll y lo despliega en
+# GitHub Pages. Los .stl no se renderizan aquí: se usan los que están en el
+# repositorio, exportados con ./scripts/exportar-stl.sh.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    if: github.repository == 'piruetasxyz/bote'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v7
+
+      - name: Copiar los STL de cada revisión
+        run: |
+          set -eu
+          for fab in hardware/bote-v-*-rev-*-fab; do
+            [ -d "$fab" ] || continue
+            revision="$(basename "$fab" -fab)"
+            if ! ls "$fab"/*.stl >/dev/null 2>&1; then
+              echo "::warning::$fab no tiene archivos .stl"
+              continue
+            fi
+            mkdir -p "docs/stl/$revision"
+            cp "$fab"/*.stl "docs/stl/$revision/"
+          done
+          find docs/stl -name '*.stl' | sort
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v6
+
+      - name: Construir con Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./_site
+
+  desplegar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: Desplegar en GitHub Pages
+        id: despliegue
+        uses: actions/deploy-pages@v5

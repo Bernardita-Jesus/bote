@@ -1,0 +1,42 @@
+# Descripción de cada revisión para la página. La clave es el nombre de la
+# carpeta en hardware/ (sin -fab). Las revisiones aparecen solas en la página
+# apenas su carpeta -fab tiene un .stl; este archivo solamente agrega el
+# título, la fecha, las medidas y la descripción. "archivos" pone un nombre
+# a los .stl que no son la caja.
+
+bote-v-0-rev-a:
+  titulo: v0.1 rev-a
+  fecha: octubre 2026
+  medidas: 248.24 × 132.8 × 94.4 mm
+  descripcion: >-
+    Primera versión como repositorio propio. 48 hp de ancho y 90 mm de
+    profundidad útil, con agujero de 90 × 20 mm en la pared izquierda para
+    el bus de poder.
+
+bote-v-0-rev-b:
+  titulo: v0.1 rev-b
+  fecha: octubre 2026
+  medidas: 156.8 × 132.8 × 84.4 mm
+  descripcion: >-
+    Prueba de 30 hp de ancho y 80 mm de profundidad útil. El resto de la
+    geometría es igual a rev-a.
+
+bote-v-0-rev-c:
+  titulo: v0.1 rev-c
+  fecha: octubre 2026
+  medidas: 207.6 × 132.8 × 84.4 mm
+  descripcion: >-
+    40 hp de ancho y 80 mm de profundidad útil. Agujeros para el bus de
+    poder en ambas paredes laterales, de 90 × 40 mm.
+
+bote-v-0-rev-d:
+  titulo: v0.1 rev-d
+  fecha: noviembre 2026
+  medidas: 207.6 × 132.8 × 64.4 mm
+  descripcion: >-
+    40 hp de ancho y 60 mm de profundidad útil. Postes en el piso para
+    atornillar la fuente chufe y el bus chufebu, agujeros laterales en forma
+    de media elipse, y agujeros de 2.9 mm en los rieles para atornillar los
+    paneles con los dedos.
+  archivos:
+    prueba_agujeros.stl: Placa de prueba para elegir el diámetro de los agujeros de los rieles

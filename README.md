@@ -63,12 +63,17 @@ git -C terceros/popusintes-cajas-paneles checkout <tag>
 
 y después volver a exportar y revisar que la caja no cambió sin querer.
 
+## Página
+
+En cada push a `main`, el workflow [publicar.yml](./.github/workflows/publicar.yml) copia los `.stl` de cada carpeta `hardware/bote-v-X-rev-Y-fab/` a la página, construye [docs](./docs) con Jekyll y la publica en GitHub Pages, con un visor 3D y un enlace de descarga por revisión. Las revisiones aparecen solas apenas su carpeta `-fab` tiene un `.stl`; el título, la fecha, las medidas y la descripción de cada una van en [docs/_data/revisiones.yml](./docs/_data/revisiones.yml). Los `.stl` no se renderizan en el workflow: hay que exportarlos con `./scripts/exportar-stl.sh` y hacer commit.
+
 ## Estructura del repositorio
 
 - [hardware/bote-v-0-rev-a](./hardware/bote-v-0-rev-a): archivos fuente de OpenSCAD de la caja. La versión y el ancho en hp están en [versiones.scad](./hardware/bote-v-0-rev-a/versiones.scad).
 - [hardware/bote-v-0-rev-a-fab](./hardware/bote-v-0-rev-a-fab): `.stl` para imprimir la caja.
 - [terceros/popusintes-cajas-paneles](https://github.com/piruetasxyz/popusintes-cajas-paneles): submódulo de git con las constantes eurorack y las funciones y módulos de OpenSCAD compartidos entre las cajas y paneles de popusintes.
 - [scripts](./scripts): scripts para linting, revisión de sintaxis y exportado a `.stl`.
+- [docs](./docs): página publicada en GitHub Pages, con el visor 3D de los `.stl` de cada revisión.
 - [branding](./branding): logo de piruetas.
 - [LICENSES](./LICENSES): textos completos de las licencias.
 
