@@ -1,2 +1,6 @@
 # Apple
 .DS_Store
+
+# Pagina: los .stl se copian a docs/stl/ al publicar
+docs/stl/
+docs/_site/
