@@ -22,6 +22,8 @@ Caja eurorack imprimible en 3D de [piruetas](https://piruetas.xyz), hecha en Ope
 ## Revisiones
 
 - `v0.1 rev-a`: octubre 2026, primera versión como repositorio propio. Misma geometría que bote `v0.0.11` en popusintes-cajas-paneles, donde vivía antes, pero con la profundidad útil de vuelta en 90 mm (en `v0.0.11` era 45 mm, para una prueba).
+- `v0.1 rev-b`: octubre 2026, prueba de 30 hp de ancho y 80 mm de profundidad útil. Medidas exteriores: 156.8 × 132.8 × 84.4 mm. El resto de la geometría es igual a `rev-a`.
+- `v0.1 rev-c`: octubre 2026, 40 hp de ancho y la misma profundidad útil de 80 mm que `rev-b`. El agujero del bus de poder pasa a estar en ambas paredes laterales y sube de 20 a 40 mm de alto. Medidas exteriores: 207.6 × 132.8 × 84.4 mm.
 
 ## Desarrollo
 
