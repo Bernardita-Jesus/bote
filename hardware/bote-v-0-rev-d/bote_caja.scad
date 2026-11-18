@@ -44,6 +44,15 @@ BOTE_HOLGURA = 0.4;
 BOTE_AGUJERO_BUS_LARGO = 90;
 BOTE_AGUJERO_BUS_MARGEN = 15;
 
+// el agujero es un trapecio: base de BOTE_AGUJERO_BUS_LARGO abajo y
+// lados inclinados en este angulo respecto a la horizontal. con 45
+// grados se imprime sin soportes y el lado de arriba queda de
+// 90 - 2 * 34.4 = 21.2 mm
+BOTE_AGUJERO_BUS_ANGULO = 45;
+
+// radio de las 4 esquinas del trapecio
+BOTE_AGUJERO_BUS_RADIO = 3;
+
 // el tornillo izquierdo de cada panel queda a MARGEN_X del borde
 // y el derecho a MARGEN_X del otro borde, por eso los derechos
 // caen desplazados de la grilla de los izquierdos en esta cantidad
@@ -185,22 +194,28 @@ module bote_caja(
     }
   }
 
-  // agujero del bus de poder: media elipse con la base plana abajo,
-  // en el plano y-z, extruida en x. la caja se imprime con la base
-  // sobre la cama, asi que la parte de arriba de la elipse queda en
-  // voladizo, pero sube de a poco y no es un puente recto
+  // agujero del bus de poder: trapecio con la base larga abajo y las
+  // esquinas redondeadas, en el plano y-z, extruido en x. la caja se
+  // imprime con la base sobre la cama: los lados suben en
+  // BOTE_AGUJERO_BUS_ANGULO y el lado de arriba queda como un puente
+  // recto corto
   module agujero_bus(espesor) {
     largo = BOTE_AGUJERO_BUS_LARGO;
     alto  = profundidad_ext - 2 * BOTE_AGUJERO_BUS_MARGEN;
+    // cuanto entra cada lado del trapecio en x, de abajo hacia arriba
+    entrada = alto / tan(BOTE_AGUJERO_BUS_ANGULO);
+    r = BOTE_AGUJERO_BUS_RADIO;
+    assert(largo - 2 * entrada > 2 * r,
+           "el lado de arriba del agujero del bus queda muy corto");
     // rotate lleva x 2d -> y, y 2d -> z, y la extrusion -> x
     rotate([90, 0, 90])
       linear_extrude(height = espesor)
-        intersection() {
-          translate([largo/2, 0])
-            scale([largo/2, alto])
-              circle(r = 1, $fn = 128);
-          square([largo, alto]);
-        }
+        // encoge y vuelve a crecer: redondea las esquinas sin
+        // cambiar los lados rectos
+        offset(r = r, $fn = 48)
+          offset(delta = -r)
+            polygon([[0, 0], [largo, 0],
+                     [largo - entrada, alto], [entrada, alto]]);
   }
 
   difference() {
