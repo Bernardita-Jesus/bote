@@ -32,7 +32,8 @@ Todavía no hay archivos `.stl` publicados.
 {% assign datos = site.data.revisiones[carpeta] %}
 {% assign ruta = "/stl/" | append: carpeta | append: "/" %}
 {% assign archivos = stls | where_exp: "a", "a.path contains ruta" %}
-{% assign caja = archivos | where: "name", "bote_caja.stl" | first %}
+{% assign nombre_caja = carpeta | append: ".stl" %}
+{% assign caja = archivos | where: "name", nombre_caja | first %}
 {% if caja == nil %}{% assign caja = archivos | first %}{% endif %}
 <section class="revision{% if forloop.first %} ultima{% endif %}" id="{{ carpeta }}">
 <h3>{% if datos.titulo %}{{ datos.titulo }}{% else %}{{ carpeta }}{% endif %}{% if forloop.first %}<span class="etiqueta">última revisión</span>{% endif %}</h3>

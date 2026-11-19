@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # renderiza la caja de cada revision de hardware/ a .stl. por cada
 # carpeta fuente hardware/bote-v-X-rev-Y/ deja la pieza en la carpeta
-# de fabricacion hermana hardware/bote-v-X-rev-Y-fab/bote_caja.stl
+# de fabricacion hermana hardware/bote-v-X-rev-Y-fab/bote-v-X-rev-Y.stl
 #
 # uso:
 #   ./scripts/exportar-stl.sh                 exporta todas las revisiones
@@ -56,7 +56,7 @@ for revision in "${revisiones[@]}"; do
   directorio_fab="$raiz_repo/hardware/$revision-fab"
   mkdir -p "$directorio_fab"
 
-  salida="$directorio_fab/bote_caja.stl"
+  salida="$directorio_fab/$revision.stl"
   echo "Exportando $salida..."
 
   if ! "$openscad" -o "$salida" --export-format binstl --quiet "$fuente"; then

@@ -53,7 +53,7 @@ Para exportar la caja a `.stl`:
 ./scripts/exportar-stl.sh
 ```
 
-Esto renderiza cada revisión `hardware/bote-v-X-rev-Y/` en su carpeta de fabricación `hardware/bote-v-X-rev-Y-fab/bote_caja.stl`. También se puede exportar una sola revisión, por ejemplo `./scripts/exportar-stl.sh bote-v-0-rev-a`. Requiere tener `openscad` instalado (en Mac, si no está en el `PATH`, el script busca automáticamente `/Applications/OpenSCAD.app`).
+Esto renderiza cada revisión `hardware/bote-v-X-rev-Y/` en su carpeta de fabricación `hardware/bote-v-X-rev-Y-fab/bote-v-X-rev-Y.stl`. También se puede exportar una sola revisión, por ejemplo `./scripts/exportar-stl.sh bote-v-0-rev-a`. Requiere tener `openscad` instalado (en Mac, si no está en el `PATH`, el script busca automáticamente `/Applications/OpenSCAD.app`).
 
 Para actualizar la biblioteca compartida a un tag nuevo de popusintes-cajas-paneles:
 
