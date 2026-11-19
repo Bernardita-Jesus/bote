@@ -41,4 +41,7 @@ BOTE_HP = 40;
 // agujeros del bus de poder pasan a ser trapecios de 70 mm abajo,
 // 35 mm arriba y 34.4 mm de alto, con esquinas redondeadas de 3 mm
 // abajo y 6 mm arriba. agrega prueba_pared_bus.scad, un tramo de pared
-// para probar como se imprime el agujero antes de imprimir la caja
+// para probar como se imprime el agujero antes de imprimir la caja.
+// los grabados de la base suben a 10 mm el nombre y 7 mm la version,
+// con las letras 15% mas separadas, para que no se cierren al imprimir
+// contra la cama
