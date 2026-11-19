@@ -106,6 +106,13 @@ BOTE_POSTE_DIAMETRO = 7;
 // con el piso. 45 grados, se imprime sin soportes
 BOTE_POSTE_BASE = 1.5;
 
+// grabados de la base, en mm. la base se imprime contra la cama y la
+// primera capa se aplasta hacia los lados, asi que las letras van
+// grandes y separadas para que el grabado no se cierre
+BOTE_GRABADO_TAMANO_TEXTO = 10;
+BOTE_GRABADO_TAMANO_VERSION = 7;
+BOTE_GRABADO_ESPACIADO = 1.15;
+
 // alto exterior de la caja: piso, profundidad util y panel
 function bote_profundidad_ext(pared = CAJA_PARED) =
   pared + BOTE_PROFUNDIDAD_UTIL + PANEL_PROFUNDIDAD;
@@ -140,14 +147,29 @@ module bote_agujero_bus_perfil(profundidad_ext) {
         circle(r = esquina[2], $fn = 48);
 }
 
+// igual que texto_base() de popusintes-cajas-paneles, pero con las
+// letras mas separadas
+module bote_grabado_base(texto, tamano, x, y) {
+  translate([x, y, -0.01])
+    // espejo en y, para leer el texto desde la cara exterior de la base
+    mirror([0, 1, 0])
+      linear_extrude(height = grabado_hondo + 0.01)
+        text(texto,
+             size = tamano,
+             font = grabado_fuente,
+             spacing = BOTE_GRABADO_ESPACIADO,
+             halign = "center",
+             valign = "center");
+}
+
 module bote_caja(
     hp,
     texto = BOTE_TEXTO,
     version = VERSION,
     pared = CAJA_PARED,
     radio_esquina = 1.5,
-    tamano_texto = MODULO_ALTURA_3U * 0.05,
-    tamano_version = MODULO_ALTURA_3U * 0.035
+    tamano_texto = BOTE_GRABADO_TAMANO_TEXTO,
+    tamano_version = BOTE_GRABADO_TAMANO_VERSION
 ) {
 
   ancho_int  = MODULO_ANCHO * hp + BOTE_HOLGURA;
@@ -268,7 +290,7 @@ module bote_caja(
         agujero_bus(pared + 2);
 
     // grabados en la base
-    texto_base(texto,   tamano_texto,   ancho_ext/2, 40*altura_ext/100);
-    texto_base(version, tamano_version, ancho_ext/2, 60*altura_ext/100);
+    bote_grabado_base(texto,   tamano_texto,   ancho_ext/2, 40*altura_ext/100);
+    bote_grabado_base(version, tamano_version, ancho_ext/2, 60*altura_ext/100);
   }
 }

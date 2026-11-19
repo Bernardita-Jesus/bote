@@ -48,5 +48,6 @@ bote-v-0-rev-e:
   descripcion: >-
     Misma geometría que rev-d, con agujeros laterales en forma de trapecio
     de 70 mm abajo, 35 mm arriba y 34.4 mm de alto, con esquinas redondeadas.
+    Grabados de la base más grandes y con las letras más separadas.
   archivos:
     prueba_pared_bus.stl: Tramo de pared para probar cómo se imprime el agujero del bus de poder
