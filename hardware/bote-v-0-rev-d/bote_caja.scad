@@ -41,20 +41,8 @@ BOTE_HOLGURA = 0.4;
 // centrado en cada pared. el alto se calcula para dejar
 // BOTE_AGUJERO_BUS_MARGEN de pared arriba y abajo del agujero
 // (con 64.4 mm de alto exterior el agujero queda de 34.4 mm)
-BOTE_AGUJERO_BUS_LARGO = 70;
+BOTE_AGUJERO_BUS_LARGO = 90;
 BOTE_AGUJERO_BUS_MARGEN = 15;
-
-// el agujero es un trapecio: base de BOTE_AGUJERO_BUS_LARGO abajo y
-// lado de arriba de este largo, centrado. con 70 y 35 mm y 34.4 mm de
-// alto los lados quedan a ~63 grados de la horizontal, mas empinados
-// que 45, asi que se imprimen sin soportes
-BOTE_AGUJERO_BUS_ARRIBA = 35;
-
-// radio de las 2 esquinas de abajo y de las 2 de arriba del
-// trapecio. las de arriba son obtusas y con el mismo radio se ven
-// casi en punta, por eso llevan un radio mayor
-BOTE_AGUJERO_BUS_RADIO = 3;
-BOTE_AGUJERO_BUS_RADIO_ARRIBA = 6;
 
 // el tornillo izquierdo de cada panel queda a MARGEN_X del borde
 // y el derecho a MARGEN_X del otro borde, por eso los derechos
@@ -105,40 +93,6 @@ BOTE_POSTE_DIAMETRO = 7;
 // base conica de los postes, para que no se quiebren en la union
 // con el piso. 45 grados, se imprime sin soportes
 BOTE_POSTE_BASE = 1.5;
-
-// alto exterior de la caja: piso, profundidad util y panel
-function bote_profundidad_ext(pared = CAJA_PARED) =
-  pared + BOTE_PROFUNDIDAD_UTIL + PANEL_PROFUNDIDAD;
-
-// perfil 2d del agujero del bus de poder: trapecio con la base larga
-// abajo y las esquinas redondeadas, con el origen en la esquina de
-// abajo a la izquierda. la caja se imprime con la base sobre la cama:
-// los lados suben inclinados y el lado de arriba queda como un puente
-// recto. lo usan bote_caja() y prueba_pared_bus.scad
-module bote_agujero_bus_perfil(profundidad_ext) {
-  largo = BOTE_AGUJERO_BUS_LARGO;
-  alto  = profundidad_ext - 2 * BOTE_AGUJERO_BUS_MARGEN;
-  // cuanto entra cada lado del trapecio en x, de abajo hacia arriba
-  entrada = (largo - BOTE_AGUJERO_BUS_ARRIBA) / 2;
-  r_abajo  = BOTE_AGUJERO_BUS_RADIO;
-  r_arriba = BOTE_AGUJERO_BUS_RADIO_ARRIBA;
-  // angulo de los lados respecto a la horizontal
-  a = atan2(alto, entrada);
-  // centro del circulo de cada esquina de la izquierda, tangente a
-  // los dos lados que llegan a esa esquina. las de la derecha son el
-  // espejo. abajo la esquina mide a, arriba 180 - a
-  x_abajo  = r_abajo / tan(a / 2);
-  x_arriba = entrada + r_arriba * tan(a / 2);
-  assert(x_arriba < largo / 2,
-         "el lado de arriba del agujero del bus queda muy corto para su radio");
-  // el trapecio es convexo, asi que el hull de los 4 circulos es el
-  // trapecio con las esquinas redondeadas, sin mover los lados rectos
-  hull()
-    for (x = [0, largo], esquina = [[x_abajo, r_abajo, r_abajo],
-                                    [x_arriba, alto - r_arriba, r_arriba]])
-      translate([x == 0 ? esquina[0] : largo - esquina[0], esquina[1]])
-        circle(r = esquina[2], $fn = 48);
-}
 
 module bote_caja(
     hp,
@@ -231,12 +185,22 @@ module bote_caja(
     }
   }
 
-  // agujero del bus de poder en el plano y-z, extruido en x
+  // agujero del bus de poder: media elipse con la base plana abajo,
+  // en el plano y-z, extruida en x. la caja se imprime con la base
+  // sobre la cama, asi que la parte de arriba de la elipse queda en
+  // voladizo, pero sube de a poco y no es un puente recto
   module agujero_bus(espesor) {
+    largo = BOTE_AGUJERO_BUS_LARGO;
+    alto  = profundidad_ext - 2 * BOTE_AGUJERO_BUS_MARGEN;
     // rotate lleva x 2d -> y, y 2d -> z, y la extrusion -> x
     rotate([90, 0, 90])
       linear_extrude(height = espesor)
-        bote_agujero_bus_perfil(profundidad_ext);
+        intersection() {
+          translate([largo/2, 0])
+            scale([largo/2, alto])
+              circle(r = 1, $fn = 128);
+          square([largo, alto]);
+        }
   }
 
   difference() {

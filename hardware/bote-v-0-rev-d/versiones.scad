@@ -35,5 +35,4 @@ BOTE_HP = 40;
 // chaflan de entrada, para atornillar con los dedos. el diametro se
 // eligio imprimiendo prueba_agujeros.scad.
 // los agujeros del bus de poder dejan 15 mm de pared arriba y abajo,
-// y pasan a ser trapecios de 70 mm abajo, 35 mm arriba y 34.4 mm de
-// alto, con esquinas redondeadas de 3 mm abajo y 6 mm arriba
+// y pasan a ser medias elipses de 90 mm de base y 34.4 mm de alto

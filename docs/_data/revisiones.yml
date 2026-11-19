@@ -40,3 +40,13 @@ bote-v-0-rev-d:
     paneles con los dedos.
   archivos:
     prueba_agujeros.stl: Placa de prueba para elegir el diámetro de los agujeros de los rieles
+
+bote-v-0-rev-e:
+  titulo: v0.1 rev-e
+  fecha: noviembre 2026
+  medidas: 207.6 × 132.8 × 64.4 mm
+  descripcion: >-
+    Misma geometría que rev-d, con agujeros laterales en forma de trapecio
+    de 70 mm abajo, 35 mm arriba y 34.4 mm de alto, con esquinas redondeadas.
+  archivos:
+    prueba_pared_bus.stl: Tramo de pared para probar cómo se imprime el agujero del bus de poder
